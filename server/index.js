@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const debug = require("debug")("social-networks:server");
 const express = require("express");
 const chalk = require("chalk");
+const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
@@ -30,8 +31,6 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
-app.use("/users", (req, res, next) => {
-  res.json("Todo ok");
-});
+app.use("/users", usersRoutes);
 
 module.exports = { initServer, app };
