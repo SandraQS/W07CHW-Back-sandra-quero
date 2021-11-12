@@ -30,4 +30,8 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/users", (req, res, next) => {
+  res.json("Todo ok");
+});
+
 module.exports = { initServer, app };
