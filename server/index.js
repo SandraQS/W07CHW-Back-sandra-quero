@@ -4,6 +4,10 @@ const debug = require("debug")("social-networks:server");
 const express = require("express");
 const chalk = require("chalk");
 const usersRoutes = require("./routes/usersRoutes");
+const {
+  handlerNotFound,
+  handlerGeneralError,
+} = require("./middlewares/errors");
 
 const app = express();
 
@@ -32,5 +36,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/users", usersRoutes);
+
+app.use(handlerNotFound);
+app.use(handlerGeneralError);
 
 module.exports = { initServer, app };
