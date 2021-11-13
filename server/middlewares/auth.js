@@ -24,8 +24,6 @@ const auth = (req, res, next) => {
           id: user.id,
           name: user.name,
           age: user.age,
-          friends: user.friends,
-          enemies: user.enemies,
           image: user.image,
         };
         next();

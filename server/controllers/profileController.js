@@ -28,4 +28,14 @@ const addFriends = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers, addFriends };
+const getFriends = async (req, res) => {
+  const { id } = req.userInfo;
+  const myUser = await User.findById(id).populate({
+    path: "friends",
+    select: "username",
+  });
+  console.log(myUser);
+  res.json(myUser);
+};
+
+module.exports = { getUsers, addFriends, getFriends };
