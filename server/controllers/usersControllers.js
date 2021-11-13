@@ -26,7 +26,6 @@ const userLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const usernameExist = await User.findOne({ username });
-    console.log(usernameExist);
     if (!usernameExist) {
       const error = new Error("Parece que algo ha fallado");
       error.code = 401;
