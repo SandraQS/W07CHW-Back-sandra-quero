@@ -15,12 +15,23 @@ const getUsers = async (req, res, next) => {
 const addFriends = async (req, res, next) => {
   try {
     const { id } = req.body;
-    const { userInfo } = req;
-    const myUser = await User.findOne({ _id: userInfo.id });
-
-    myUser.friends = [...myUser.friends, id];
-    await myUser.save(myUser);
-    res.json({ myUser });
+    if (!id) {
+      const error = new Error("Usuario no entontrado");
+      error.code = 404;
+      next(error);
+    } else {
+      const { userInfo } = req;
+      if (!userInfo) {
+        const error = new Error("Usuario no entontrado");
+        error.code = 404;
+        next(error);
+      } else {
+        const myUser = await User.findOne({ _id: userInfo.id });
+        myUser.friends = [...myUser.friends, id];
+        await myUser.save(myUser);
+        res.json({ myUser });
+      }
+    }
   } catch {
     const error = new Error("No encontrado");
     error.code = 404;
@@ -29,13 +40,17 @@ const addFriends = async (req, res, next) => {
 };
 
 const getFriends = async (req, res) => {
-  const { id } = req.userInfo;
-  const myUser = await User.findById(id).populate({
-    path: "friends",
-    select: "username",
-  });
-  console.log(myUser);
-  res.json(myUser);
+  try {
+    const { id } = req.userInfo;
+    const myUser = await User.findById(id).populate({
+      path: "friends",
+      select: "username",
+    });
+    res.json(myUser);
+  } catch {
+    const error = new Error("Algo ha fallado");
+    error.code = 401;
+  }
 };
 
 module.exports = { getUsers, addFriends, getFriends };
