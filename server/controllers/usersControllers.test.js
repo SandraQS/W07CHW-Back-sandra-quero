@@ -49,6 +49,30 @@ describe("Given userCreate controller", () => {
       expect(res.json).toHaveBeenCalledWith(newUser);
     });
   });
+
+  describe("When receives a function next and rejected error", () => {
+    test("Then it should call the next function with the error object and status code 400", async () => {
+      const req = {
+        body: {
+          name: "Carlitos",
+          username: "Carlitus",
+          password: "holis",
+          age: 33,
+        },
+      };
+      const error = new Error("El formato introducido no es válido");
+      User.create = jest.fn().mockRejectedValue(error);
+      const res = {
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+
+      await userCreate(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+      expect(error.code).toBe(400);
+    });
+  });
 });
 
 describe("Given userLogin controller", () => {
