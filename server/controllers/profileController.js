@@ -6,8 +6,8 @@ const getUsers = async (req, res, next) => {
     const users = await User.find();
     res.json({ users });
   } catch {
-    const error = new Error("Not found");
-    error.code = 400;
+    const error = new Error("No encontrado");
+    error.code = 404;
     next(error);
   }
 };
