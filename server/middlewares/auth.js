@@ -10,7 +10,7 @@ const auth = (req, res, next) => {
     error.code = 401;
     next(error);
   } else {
-    const token = authHeader.split("")[1];
+    const token = authHeader.split(" ")[1];
     if (!token) {
       debug(chalk.red("No estás autorizado"));
       const error = new Error("No estás autorizado");
