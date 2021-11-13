@@ -13,13 +13,19 @@ const getUsers = async (req, res, next) => {
 };
 
 const addFriends = async (req, res, next) => {
-  const { id } = req.body;
-  const { userInfo } = req;
-  const myUser = await User.findOne({ _id: userInfo.id });
+  try {
+    const { id } = req.body;
+    const { userInfo } = req;
+    const myUser = await User.findOne({ _id: userInfo.id });
 
-  myUser.friends = [...myUser.friends, id];
-  await myUser.save(myUser);
-  res.json({ myUser });
+    myUser.friends = [...myUser.friends, id];
+    await myUser.save(myUser);
+    res.json({ myUser });
+  } catch {
+    const error = new Error("No encontrado");
+    error.code = 404;
+    next(error);
+  }
 };
 
 module.exports = { getUsers, addFriends };
