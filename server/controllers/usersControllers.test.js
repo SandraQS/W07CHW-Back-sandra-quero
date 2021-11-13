@@ -134,4 +134,21 @@ describe("Given userLogin controller", () => {
       expect(res.json).toHaveBeenCalledWith(response);
     });
   });
+
+  describe("When it receives a function next and rejected error", () => {
+    test("Then it should called next function with the error object, error.message 'No autorizado' and error.code is 401", async () => {
+      const next = jest.fn();
+      User.findOne = jest.fn().mockRejectedValue(null);
+      const error = new Error("No estás autorizado");
+      const req = {
+        body: {},
+      };
+
+      await userLogin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+      expect(next.mock.calls[0][0]).toHaveProperty("message", error.message);
+      expect(next.mock.calls[0][0]).toHaveProperty("code", 401);
+    });
+  });
 });

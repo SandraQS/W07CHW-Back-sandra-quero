@@ -47,9 +47,9 @@ const userLogin = async (req, res, next) => {
         res.json({ token });
       }
     }
-  } catch (error) {
+  } catch {
+    const error = new Error("No estás autorizado");
     error.code = 401;
-    error.message = "No estás autorizado";
     next(error);
   }
 };
