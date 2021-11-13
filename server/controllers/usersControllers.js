@@ -26,6 +26,7 @@ const userLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const usernameExist = await User.findOne({ username });
+    console.log(usernameExist);
     if (!usernameExist) {
       const error = new Error("Parece que algo ha fallado");
       error.code = 401;
@@ -41,7 +42,15 @@ const userLogin = async (req, res, next) => {
         next(error);
       } else {
         const token = jwt.sign(
-          { usernameExist, id: usernameExist.id },
+          {
+            username: usernameExist.username,
+            id: usernameExist.id,
+            name: usernameExist.name,
+            age: usernameExist.age,
+            friends: usernameExist.friends,
+            enemies: usernameExist.enemies,
+            image: usernameExist.image,
+          },
           process.env.SECRET_TOKEN
         );
         res.json({ token });
