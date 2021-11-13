@@ -26,7 +26,6 @@ const userLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const usernameExist = await User.findOne({ username });
-    console.log(usernameExist);
     if (!usernameExist) {
       const error = new Error("Parece que algo ha fallado");
       error.code = 401;
@@ -48,9 +47,9 @@ const userLogin = async (req, res, next) => {
         res.json({ token });
       }
     }
-  } catch (error) {
+  } catch {
+    const error = new Error("No estás autorizado");
     error.code = 401;
-    error.message = "No estás autorizado";
     next(error);
   }
 };
