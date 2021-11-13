@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../../database/models/User");
 const { userCreate, userLogin } = require("./usersControllers");
 
 jest.mock("bcrypt");
 jest.mock("../../database/models/User");
+jest.mock("jsonwebtoken");
 
 describe("Given userCreate controller", () => {
   describe("When it receives a req with a new user and res object", () => {
@@ -95,6 +97,41 @@ describe("Given userLogin controller", () => {
       expect(next).toHaveBeenCalledWith(error);
       expect(next.mock.calls[0][0]).toHaveProperty("message", error.message);
       expect(next.mock.calls[0][0]).toHaveProperty("code", 401);
+    });
+  });
+
+  describe("When it receives a req with a username and password correct", () => {
+    test("Then it should called res.json with a new token", async () => {
+      User.findOne = jest.fn().mockResolvedValue({
+        body: {
+          id: "618eccea689d879ac3f85577",
+          username: "Carlitus",
+          password: "holi",
+        },
+      });
+
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
+      const req = {
+        body: {
+          username: "Carlitus",
+          password: "holi",
+        },
+      };
+
+      const secretToken = "TokenSuperSeguro";
+      jwt.sign = jest.fn().mockReturnValue(secretToken);
+
+      const response = {
+        token: secretToken,
+      };
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      await userLogin(req, res);
+
+      expect(res.json).toHaveBeenCalledWith(response);
     });
   });
 });
