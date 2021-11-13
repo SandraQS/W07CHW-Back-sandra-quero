@@ -12,4 +12,14 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers };
+const addFriends = async (req, res, next) => {
+  const { id } = req.body;
+  const { userInfo } = req;
+  const myUser = await User.findOne({ _id: userInfo.id });
+
+  myUser.friends = [...myUser.friends, id];
+  await myUser.save(myUser);
+  res.json({ myUser });
+};
+
+module.exports = { getUsers, addFriends };
