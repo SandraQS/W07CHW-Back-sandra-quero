@@ -1,5 +1,5 @@
 const User = require("../../database/models/User");
-const { userCreate } = require("./usersControllers");
+const { userCreate, userLogin } = require("./usersControllers");
 
 jest.mock("../../database/models/User");
 
@@ -43,6 +43,27 @@ describe("Given userCreate controller", () => {
 
       expect(User.create).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith(newUser);
+    });
+  });
+});
+
+describe("Given userLogin controller", () => {
+  describe("When it receives a req with a username incorrect", () => {
+    test("Then it should called the function next with error, error.message '', and error.code 401", async () => {
+      const req = {
+        body: {
+          username: "Carlitus",
+          password: "holis",
+        },
+      };
+      const next = jest.fn();
+      User.findOne = jest.fn().mockResolvedValue(null);
+      const expectedError = new Error("Parece que algo ha fallado");
+      await userLogin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+      expect(expectedError).toHaveProperty("message", expectedError.message);
+      expect(next.mock.calls[0][0]).toHaveProperty("code", 401);
     });
   });
 });
