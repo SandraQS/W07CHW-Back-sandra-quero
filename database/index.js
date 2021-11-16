@@ -11,6 +11,8 @@ const initDB = (conectionDBString) =>
         delete ret._id;
         // eslint-disable-next-line no-underscore-dangle
         delete ret.__v;
+
+        /// OJO AQUI QUITAR PASSWORD<-----
       },
     });
 
