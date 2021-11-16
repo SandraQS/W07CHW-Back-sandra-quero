@@ -16,21 +16,16 @@ const addFriends = async (req, res, next) => {
   try {
     const { id } = req.body;
     if (!id) {
-      const error = new Error("Usuario no entontrado");
+      const error = new Error("Id no ncontrada");
       error.code = 404;
       next(error);
     } else {
       const { userInfo } = req;
-      if (!userInfo) {
-        const error = new Error("Usuario no entontrado");
-        error.code = 404;
-        next(error);
-      } else {
-        const myUser = await User.findOne({ _id: userInfo.id });
-        myUser.friends = [...myUser.friends, id];
-        await myUser.save(myUser);
-        res.json({ myUser });
-      }
+      const myFriend = await User.findOne({ _id: id });
+      const myUser = await User.findOne({ _id: userInfo.id });
+      myUser.friends = [...myUser.friends, myFriend.id];
+      await myUser.save(myUser);
+      res.json({ myUser });
     }
   } catch {
     const error = new Error("No encontrado");

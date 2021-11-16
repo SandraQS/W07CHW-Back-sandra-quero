@@ -88,7 +88,7 @@ describe("Given addFriends controller", () => {
         username: "Carlitus",
         password:
           "$2b$10$s3c31JSTdrwRMwW5jLaE6.ridoUF4lXQpSTQtECectp/aCmMNXswK",
-        friends: ["619005acad093c07f5590449"],
+        friends: [],
         enemies: [],
         age: 33,
         image:
